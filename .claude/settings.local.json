@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm view:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh api:*)",
+      "Bash(npm run build-test:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run eslint:*)",
+      "Bash(npm run build-dev:*)"
+    ]
+  }
+}

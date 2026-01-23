@@ -2,7 +2,9 @@ import ColourOfPP from '../../../Cache/PP/ColourOfPP.js';
 import {
   CacheObjects1,
   CacheObjects10,
+  CacheObjects50,
   CacheObjects100,
+  CacheObjectsMax,
   CacheObjectsNextAchievement,
 } from '../../../Cache/VariablesAndData.js';
 
@@ -34,7 +36,9 @@ export default function Building() {
   }
   if (Game.buyBulk === 1) target = CacheObjects1;
   else if (Game.buyBulk === 10) target = CacheObjects10;
+  else if (Game.buyBulk === 50) target = CacheObjects50;
   else if (Game.buyBulk === 100) target = CacheObjects100;
+  else if (Game.buyBulk === -1) target = CacheObjectsMax;
 
   TooltipPrice = Game.Objects[TooltipName].bulkPrice;
   TooltipBonusIncome = target[TooltipName].bonus;

@@ -11,7 +11,9 @@ import {
   CacheDoRemakeBuildPrices, // eslint-disable-line no-unused-vars
   CacheObjects1,
   CacheObjects10,
+  CacheObjects50,
   CacheObjects100,
+  CacheObjectsMax,
   CacheObjectsNextAchievement,
   CacheUpgrades,
 } from '../VariablesAndData.js';
@@ -30,6 +32,24 @@ function CacheBuildingIncome(amount) {
     if (amount !== 1) {
       CacheDoRemakeBuildPrices = 1;
     }
+  });
+  return result;
+}
+
+/**
+ * This function calculates the bonus income for Max mode
+ * Each building uses its own bulkBuyable amount (or defaults to 1000)
+ * It is called by CM.Cache.CacheIncome()
+ */
+function CacheBuildingIncomeMax() {
+  const result = {};
+  Object.keys(Game.Objects).forEach((i) => {
+    result[i] = {};
+    // Use bulkBuyable from MaxButtonRestorer mod if available, otherwise default to 1000
+    const amount = Game.Objects[i].bulkBuyable || 1000;
+    result[i].bonus = BuyBuildingsBonusIncome(i, amount);
+    result[i].AmountNeeded = amount;
+    CacheDoRemakeBuildPrices = 1;
   });
   return result;
 }
@@ -79,12 +99,27 @@ export function CacheBuildingsPrices() {
       Game.Objects[i].free,
       10,
     );
+    CacheObjects50[i].price = BuildingGetPrice(
+      i,
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      50,
+    );
     CacheObjects100[i].price = BuildingGetPrice(
       i,
       Game.Objects[i].basePrice,
       Game.Objects[i].amount,
       Game.Objects[i].free,
       100,
+    );
+    // For Max mode, use the stored AmountNeeded (bulkBuyable or 1000)
+    CacheObjectsMax[i].price = BuildingGetPrice(
+      i,
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      CacheObjectsMax[i].AmountNeeded || 1000,
     );
     CacheObjectsNextAchievement[i].price = BuildingGetPrice(
       i,
@@ -103,10 +138,12 @@ export function CacheBuildingsPrices() {
  * It is called by CM.Main.Loop() and CM.Cache.InitCache()
  */
 export function CacheIncome() {
-  // Simulate Building Buys for 1, 10 and 100 amount
+  // Simulate Building Buys for 1, 10, 50, 100 and Max amount
   CacheObjects1 = CacheBuildingIncome(1);
   CacheObjects10 = CacheBuildingIncome(10);
+  CacheObjects50 = CacheBuildingIncome(50);
   CacheObjects100 = CacheBuildingIncome(100);
+  CacheObjectsMax = CacheBuildingIncomeMax();
 
   // Simulate Upgrade Buys
   CacheUpgradeIncome();

@@ -55,7 +55,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@cookiemonsterteam/cookiemonsterframework": "0.2.3",
+    "@cookiemonsterteam/cookiemonsterframework": "github:CookieMonsterTeam/CookieMonsterFramework#0.2.3",
     "@eastdesire/jscolor": "^2.5.1",
     "@eslint/compat": "^1.2.7",
     "@eslint/eslintrc": "^3.2.0",

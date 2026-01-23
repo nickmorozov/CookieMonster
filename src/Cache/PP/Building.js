@@ -7,7 +7,9 @@ import {
   CacheMinPPBulk,
   CacheObjects1,
   CacheObjects10,
+  CacheObjects50,
   CacheObjects100,
+  CacheObjectsMax,
   CachePPArray,
 } from '../VariablesAndData.js';
 import ColourOfPP from './ColourOfPP.js';
@@ -73,6 +75,56 @@ function CachePP(target, amount) {
 }
 
 /**
+ * Special CachePP for Max mode where each building has a different amount
+ */
+function CachePPMax(target) {
+  Object.keys(target).forEach((i) => {
+    const amount = target[i].AmountNeeded || 1000;
+    const price = BuildingGetPrice(
+      i,
+      Game.Objects[i].basePrice,
+      Game.Objects[i].amount,
+      Game.Objects[i].free,
+      amount,
+    );
+    if (Game.cookiesPs) {
+      target[i].pp = // eslint-disable-line no-param-reassign
+        Math.max(price - (Game.cookies + GetWrinkConfigBank()), 0) / Game.cookiesPs +
+        price / target[i].bonus;
+    } else target[i].pp = price / target[i].bonus; // eslint-disable-line no-param-reassign
+    CachePPArray.push([target[i].pp, -1, price]);
+  });
+}
+
+/**
+ * Special CacheColour for Max mode where each building has a different amount
+ */
+function CacheColourMax(target) {
+  Object.keys(target).forEach((i) => {
+    const amount = target[i].AmountNeeded || 1000;
+    // eslint-disable-next-line no-param-reassign
+    target[i].colour = ColourOfPP(
+      target[i],
+      BuildingGetPrice(
+        i,
+        Game.Objects[i].basePrice,
+        Game.Objects[i].amount,
+        Game.Objects[i].free,
+        amount,
+      ),
+    );
+    // Colour based on excluding certain top-buildings
+    for (
+      let j = 0;
+      j < Game.mods.cookieMonsterFramework.saveData.cookieMonsterMod.settings.PPExcludeTop;
+      j++
+    ) {
+      if (target[i].pp === CachePPArray[j][0]) target[i].colour = ColourGray; // eslint-disable-line no-param-reassign
+    }
+  });
+}
+
+/**
  * This functions caches the PP of each building it saves all date in CM.Cache.Objects...
  * It is called by CM.Cache.CachePP()
  */
@@ -88,7 +140,9 @@ export default function CacheBuildingsPP() {
   // Calculate PP and colours
   CachePP(CacheObjects1, 1);
   CachePP(CacheObjects10, 10);
+  CachePP(CacheObjects50, 50);
   CachePP(CacheObjects100, 100);
+  CachePPMax(CacheObjectsMax);
 
   // Set CM.Cache.min to best non-excluded buidliung
   CachePPArray.sort((a, b) => a[0] - b[0]);
@@ -106,7 +160,9 @@ export default function CacheBuildingsPP() {
 
   CacheColour(CacheObjects1, 1);
   CacheColour(CacheObjects10, 10);
+  CacheColour(CacheObjects50, 50);
   CacheColour(CacheObjects100, 100);
+  CacheColourMax(CacheObjectsMax);
 
   FillCMDCache({ CacheMinPP, CacheMinPPBulk, CachePPArray });
 }

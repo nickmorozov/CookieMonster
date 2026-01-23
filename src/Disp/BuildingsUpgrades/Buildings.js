@@ -2,7 +2,9 @@ import {
   CacheMinPPBulk,
   CacheObjects1,
   CacheObjects10,
+  CacheObjects50,
   CacheObjects100,
+  CacheObjectsMax,
   CacheObjectsNextAchievement,
 } from '../../Cache/VariablesAndData.js';
 import BuildingSell from '../../Sim/SimulationEvents/SellBuilding.js';
@@ -27,7 +29,9 @@ export default function UpdateBuildings() {
   }
   if (target === 1) target = CacheObjects1;
   else if (target === 10) target = CacheObjects10;
+  else if (target === 50) target = CacheObjects50;
   else if (target === 100) target = CacheObjects100;
+  else if (target === -1) target = CacheObjectsMax;
 
   // Remove colour if applied
   l(`storeBulk1`).style.removeProperty('color');

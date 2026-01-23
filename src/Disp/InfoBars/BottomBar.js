@@ -1,6 +1,6 @@
 /** Functions related to the Bottom Bar */
 
-import { CacheObjects1, CacheObjects10, CacheObjects100 } from '../../Cache/VariablesAndData.js';
+import { CacheObjects1, CacheObjects10, CacheObjects50, CacheObjects100, CacheObjectsMax } from '../../Cache/VariablesAndData.js';
 import { VersionMajor, VersionMinor } from '../../Data/Moddata.js';
 import Beautify from '../BeautifyAndFormatting/Beautify.js';
 import FormatTime from '../BeautifyAndFormatting/FormatTime.js';
@@ -76,7 +76,9 @@ export function UpdateBotBar() {
       }
       if (target === 1) target = CacheObjects1;
       if (target === 10) target = CacheObjects10;
+      if (target === 50) target = CacheObjects50;
       if (target === 100) target = CacheObjects100;
+      if (target === -1) target = CacheObjectsMax;
       count += 1;
       l('CMBotBar').firstChild.firstChild.childNodes[0].childNodes[
         count
